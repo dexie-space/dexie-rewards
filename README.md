@@ -65,7 +65,7 @@ In most cases the default configuration should be sufficient. However, if you wa
 ```sh
 export CHIA_ROOT="~/.chia/mainnet"
 export DEXIE_URL="https://dexie.space"
-export DEXIE_API_URL="https://api.dexie.space/v1/"
+export DEXIE_API_URL="https://api.dexie.space/v1"
 export DEXIE_DB_PATH="/dexie_db"
 ```
 
