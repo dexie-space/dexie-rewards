@@ -3,7 +3,7 @@
 [![PyPI version](https://badge.fury.io/py/dexie-rewards.svg)](https://badge.fury.io/py/dexie-rewards)
 [![Python version](https://img.shields.io/pypi/pyversions/dexie-rewards.svg)](https://pypi.python.org/pypi/dexie-rewards)
 
-dexie-rewards is a Python CLI helper tool designed to automatically claim [dexie liquidity rewards](https://dexie.space/incentives) for offers created using the official Chia Wallet. The tool communicates locally with the Chia Wallet RPC, requests all created offers, and checks them for claimable rewards.
+dexie-rewards is a Python CLI helper tool designed automatically claim [dexie liquidity rewards](https://dexie.space/incentives) for offers created using the official Chia Wallet. The tool communicates locally with the Chia Wallet RPC, requests all created offers, and checks them for claimable rewards.
 
 When rewards are claimed, a message from the input (maker) address of the offer is signed to prove ownership of the offer. The signature is then sent to dexie to claim the rewards. dexie distributes claimed rewards to the input (maker) address in batches approximately every 15 minutes.
 
@@ -34,7 +34,6 @@ It is recommended to install dexie-rewards using pip.
 ```sh
 pip install dexie-rewards
 ```
-
 Note for macOS: If `pip` is not found, try `pip3` instead.
 
 ### Install from the repository (optional)
@@ -65,7 +64,7 @@ In most cases the default configuration should be sufficient. However, if you wa
 ```sh
 export CHIA_ROOT="~/.chia/mainnet"
 export DEXIE_URL="https://dexie.space"
-export DEXIE_API_URL="https://api.dexie.space/v1"
+export DEXIE_API_URL="https://api.dexie.space/v1/"
 export DEXIE_DB_PATH="/dexie_db"
 ```
 
@@ -76,7 +75,6 @@ Make sure that your Chia wallet is running and fully synced before using dexie-r
 Run any command with the `--help` option to see all available functionality.
 
 ### List offers with outstanding (claimable) rewards
-
 ```
 ❯ dexie rewards list
 
@@ -87,7 +85,6 @@ Run any command with the `--help` option to see all available functionality.
 ```
 
 ### Claim all outstanding (claimable) rewards
-
 ```
 ❯ dexie rewards claim
 
@@ -95,6 +92,7 @@ Run any command with the `--help` option to see all available functionality.
   --verify-only  -vo        Only verify the claim, don't actually claim
   --yes          -y         Skip claim confirmation
   --verbose      -v         Display verbose output
+  --target       -t         Specify a target address to claim rewards to 
   --help                    Show help and exit
 ```
 

@@ -10,8 +10,9 @@ import traceback
 from blspy import AugSchemeMPL, G1Element, G2Element, PrivateKey
 
 from chia.types.blockchain_format.sized_bytes import bytes32
-from chia.util.bech32m import encode_puzzle_hash
+from chia.util.bech32m import decode_puzzle_hash, encode_puzzle_hash
 
+from ..config import dexie_blue
 from ..services import dexie_db as dexie_db
 from ..utils import wait_for_synced_wallet
 from .utils import (
@@ -22,7 +23,16 @@ from .utils import (
 )
 from ..types.offer_reward import OfferReward
 
-console = Console()
+
+class ChiaWalletAddressParamType(click.ParamType):
+    name = "address"
+
+    def convert(self, value, param, ctx):
+        try:
+            puzzle_hash: bytes32 = decode_puzzle_hash(value)
+            return puzzle_hash
+        except ValueError:
+            self.fail(f"Invalid Chia Wallet Address: {value}", param, ctx)
 
 
 @click.command("claim", short_help="Claim all offers with dexie rewards")
@@ -60,13 +70,26 @@ console = Console()
     default=False,
     show_default=True,
 )
+@click.option(
+    "-t",
+    "--target",
+    "target_puzzle_hash",
+    help="Specify a target address to claim rewards to",
+    type=ChiaWalletAddressParamType(),
+    required=False,
+)
 def claim_cmds(
     fingerprint: Optional[int],
     verify_only: bool,
     skip_confirm: bool,
     verbose: bool,
+    target_puzzle_hash: Optional[bytes32],
 ) -> None:
-    asyncio.run(claim_cmds_async(fingerprint, verify_only, skip_confirm, verbose))
+    asyncio.run(
+        claim_cmds_async(
+            fingerprint, verify_only, skip_confirm, verbose, target_puzzle_hash
+        )
+    )
 
 
 async def claim_cmds_async(
@@ -74,6 +97,7 @@ async def claim_cmds_async(
     verify_only: bool,
     skip_confirm: bool,
     verbose: bool,
+    target_puzzle_hash: Optional[bytes32],
 ) -> None:
     try:
         console = Console(file=StringIO()) if not verbose else Console()
@@ -95,23 +119,31 @@ async def claim_cmds_async(
             if not Confirm.ask("Claim all?"):
                 return
 
-        claims = await create_claims(offers_rewards)
-        ret: Any = {
-            "claims": claims,
-        }
+        claims = await create_claims(offers_rewards, target_puzzle_hash)
+        ret: Any = {"claims": claims}
+        if target_puzzle_hash is not None:
+            ret["target_puzzle_hash"] = target_puzzle_hash.hex()
+
         if verify_only:
             ret["verify_only"] = True
 
         if verbose:
+            if target_puzzle_hash is not None:
+                console.print(
+                    f"target puzzle hash:",
+                    style=f"bold {dexie_blue} underline",
+                )
+                console.print(f"0x{target_puzzle_hash.hex()}")
+
             console.print(
-                "\nclaims request payload:", style="bold dodger_blue2 underline"
+                "\nclaims request payload:", style=f"bold {dexie_blue} underline"
             )
             console.print_json(json.dumps(ret, indent=4))
 
         result = await claim_rewards(ret)
 
         if verbose or verify_only:
-            console.print("\nclaims result:", style="bold dodger_blue2 underline")
+            console.print("\nclaims result:", style=f"bold {dexie_blue} underline")
             if verbose:
                 console.print_json(json.dumps(result, indent=4))
             else:

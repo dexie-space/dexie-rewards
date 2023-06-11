@@ -35,7 +35,11 @@ async def get_synced(wallet_rpc_client: WalletRpcClient) -> bool:
 @with_wallet_rpc_client(self_hostname, wallet_rpc_port, chia_root, chia_config)
 async def get_all_offers(wallet_rpc_client: WalletRpcClient) -> List[TradeRecord]:
     return await wallet_rpc_client.get_all_offers(
-        include_completed=True, exclude_taken_offers=True, file_contents=True, start=0, end=1000
+        include_completed=True,
+        exclude_taken_offers=True,
+        file_contents=True,
+        start=0,
+        end=1000,
     )
 
 
