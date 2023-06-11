@@ -1,3 +1,4 @@
+import asyncio
 from rich.console import Console
 from rich.progress import (
     Progress,
@@ -5,7 +6,6 @@ from rich.progress import (
     TextColumn,
     TimeElapsedColumn,
 )
-import time
 
 from typing import Optional
 
@@ -60,6 +60,6 @@ async def wait_for_synced_wallet(
         while True:
             if await is_wallet_synced(fingerprint):
                 break
-            time.sleep(2)
+            await asyncio.sleep(2)
 
     return fingerprint

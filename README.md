@@ -65,7 +65,7 @@ In most cases the default configuration should be sufficient. However, if you wa
 ```sh
 export CHIA_ROOT="~/.chia/mainnet"
 export DEXIE_URL="https://dexie.space"
-export DEXIE_API_URL="https://api.dexie.space/v1"
+export DEXIE_API_URL="https://api.dexie.space/v1/"
 export DEXIE_DB_PATH="/dexie_db"
 ```
 
@@ -95,6 +95,7 @@ Run any command with the `--help` option to see all available functionality.
   --verify-only  -vo        Only verify the claim, don't actually claim
   --yes          -y         Skip claim confirmation
   --verbose      -v         Display verbose output
+  --target       -t         Specify a target address to claim rewards to
   --help                    Show help and exit
 ```
 

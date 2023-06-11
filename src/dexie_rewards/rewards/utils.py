@@ -2,7 +2,7 @@ from rich import box
 from rich.console import Console
 from rich.table import Table
 from rich.text import Text
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 import time
 import traceback
 
@@ -16,18 +16,17 @@ from ..services import dexie_db as dexie_db
 from ..types.offer_reward import OfferReward
 
 
-async def create_claims(offers_rewards: List[OfferReward]) -> List[Any]:
+async def create_claims(
+    offers_rewards: List[OfferReward], target_puzzle_hash: Optional[bytes32]
+) -> List[Any]:
     timestamp = int(time.time())
     claims = []
     for offer_reward in offers_rewards:
-        (
-            public_key,
-            signature,
-            signing_mode,
-        ) = await sign_claim(
+        (public_key, signature, signing_mode,) = await sign_claim(
             offer_reward.offer_id,
             timestamp,
             offer_reward.maker_puzzle_hash,
+            target_puzzle_hash,
         )
 
         # return offer hash, signature, pk, and puzzle hash
@@ -93,9 +92,16 @@ async def get_offers_with_claimable_rewards(
 
 
 async def sign_claim(
-    offer_id: str, timestamp: int, maker_puzzle_hash: bytes32
+    offer_id: str,
+    timestamp: int,
+    maker_puzzle_hash: bytes32,
+    target_puzzle_hash: Optional[bytes32],
 ) -> Tuple[str, str, str]:
-    message = f"Claim dexie liquidity rewards for offer {offer_id} ({timestamp})"
+    message = (
+        f"Claim dexie liquidity rewards for offer {offer_id} ({timestamp})"
+        if target_puzzle_hash is None
+        else f"Claim dexie liquidity rewards for offer {offer_id} to {target_puzzle_hash} ({timestamp})"
+    )
     return await wallet_rpc_client.sign_message_by_puzzle_hash(
         maker_puzzle_hash, message
     )

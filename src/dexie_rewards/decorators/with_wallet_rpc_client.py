@@ -26,10 +26,8 @@ def with_wallet_rpc_client(self_hostname: str, rpc_port: uint16, chia_root: Path
                     self_hostname, rpc_port, chia_root, chia_config
                 )
                 return await run_rpc(rpc_client, f, *args, **kwargs)  # type: ignore
-            except Exception:
-                Console(stderr=True, style="bold red").print(
-                    "Unable to connect to wallet"
-                )
+            except Exception as e:
+                Console(stderr=True, style="bold red").print(f"wallet rpc error: {e}")
                 sys.exit(1)
 
         return with_rpc_client

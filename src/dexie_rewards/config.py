@@ -16,7 +16,7 @@ address_prefix = chia_config["network_overrides"]["config"][selected_network][
 ]
 
 
-dexie_mainnet = "https://dexie.space/"
+dexie_mainnet = "https://dexie.space"
 dexie_testnet = "https://testnet.dexie.space"
 dexie_local = "http://localhost:3000"
 
