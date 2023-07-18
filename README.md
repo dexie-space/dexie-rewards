@@ -91,19 +91,20 @@ Run any command with the `--help` option to see all available functionality.
 ```
 ❯ dexie rewards claim
 
-  --fingerprint  -f         Set the fingerprint to specify which wallet to use
-  --verify-only  -vo        Only verify the claim, don't actually claim
-  --yes          -y         Skip claim confirmation
-  --verbose      -v         Display verbose output
-  --target       -t         Specify a target address to claim rewards to
-  --help                    Show help and exit
+  --fingerprint     -f        Set the fingerprint to specify which wallet to use
+  --verify-only     -vo       Only verify the claim, don't actually claim
+  --yes             -y        Skip claim confirmation
+  --verbose         -v        Display verbose output
+--target            -t        Specify a target address to claim rewards to
+  --completed-only  -co       Only claim rewards for completed and cancelled offers
+  --help                      Show help and exit
 ```
 
 ## Troubleshooting
 
 If you encounter any issues, follow these steps to help identify and resolve them:
 
-1. **Check your Python version**: Ensure you are using Python 3.11 or later, as older versions are not supported.
+1. **Check your Python version**: Ensure you are using Python 3.10 or later, as older versions are not supported.
 
 2. **Update packages**: Update both dexie-rewards and its dependencies by running `pip install --upgrade dexie-rewards`.
 

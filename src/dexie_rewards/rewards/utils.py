@@ -22,7 +22,11 @@ async def create_claims(
     timestamp = int(time.time())
     claims = []
     for offer_reward in offers_rewards:
-        (public_key, signature, signing_mode,) = await sign_claim(
+        (
+            public_key,
+            signature,
+            signing_mode,
+        ) = await sign_claim(
             offer_reward.offer_id,
             timestamp,
             offer_reward.maker_puzzle_hash,
@@ -143,7 +147,9 @@ def display_rewards(offers_rewards: List[OfferReward]) -> None:
 
     for offer_reward in offers_rewards:
         offer_hash = Text(offer_reward.offer_id)
-        offer_hash.stylize(f"bold {dexie_blue}")
+        offer_hash.stylize(
+            f"{dexie_blue} {'strike' if not offer_reward.is_active else 'bold'}"
+        )
         offer_hash.stylize(f"link {dexie_url}/offers/{offer_reward.offer_id}")
         amount = "{0:0.3f}".format(offer_reward.claimable_rewards)
         table.add_row(
