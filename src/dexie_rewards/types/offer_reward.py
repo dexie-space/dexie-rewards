@@ -24,3 +24,12 @@ class OfferReward:
             date_found=to_datetime(json_dict["date_found"]),
             maker_puzzle_hash=bytes32.from_hexstr(json_dict["maker_puzzle_hash"]),
         )
+
+    def to_json_dict(self) -> Dict[str, Any]:
+        return {
+            "id": self.offer_id,
+            "is_active": self.is_active,
+            "claimable_rewards": self.claimable_rewards,
+            "date_found": self.date_found.isoformat(),
+            "maker_puzzle_hash": self.maker_puzzle_hash.hex(),
+        }

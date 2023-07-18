@@ -78,16 +78,30 @@ class ChiaWalletAddressParamType(click.ParamType):
     type=ChiaWalletAddressParamType(),
     required=False,
 )
+@click.option(
+    "-co",
+    "--completed-only",
+    help="Only claim rewards for completed and cancelled offers",
+    is_flag=True,
+    default=False,
+    show_default=True,
+)
 def claim_cmds(
     fingerprint: Optional[int],
     verify_only: bool,
     skip_confirm: bool,
     verbose: bool,
     target_puzzle_hash: Optional[bytes32],
+    completed_only: bool,
 ) -> None:
     asyncio.run(
         claim_cmds_async(
-            fingerprint, verify_only, skip_confirm, verbose, target_puzzle_hash
+            fingerprint,
+            verify_only,
+            skip_confirm,
+            verbose,
+            target_puzzle_hash,
+            completed_only,
         )
     )
 
@@ -98,6 +112,7 @@ async def claim_cmds_async(
     skip_confirm: bool,
     verbose: bool,
     target_puzzle_hash: Optional[bytes32],
+    completed_only: bool,
 ) -> None:
     try:
         console = Console(file=StringIO()) if not verbose else Console()
@@ -108,7 +123,14 @@ async def claim_cmds_async(
         offers_rewards_dict = await get_offers_with_claimable_rewards(
             synced_fingerprint, console
         )
-        offers_rewards = list(map(OfferReward.from_json_dict, offers_rewards_dict))
+
+        offers_rewards = list(
+            filter(
+                (lambda o: not o.is_active) if completed_only else (lambda _: True),
+                map(OfferReward.from_json_dict, offers_rewards_dict),
+            )
+        )
+
         if len(offers_rewards) == 0:
             console.print("No rewards to claim", style="bold red")
             return
@@ -116,7 +138,7 @@ async def claim_cmds_async(
         display_rewards(offers_rewards)
 
         if not skip_confirm:
-            if not Confirm.ask("Claim all?"):
+            if not Confirm.ask(f"Claim all?"):
                 return
 
         claims = await create_claims(offers_rewards, target_puzzle_hash)
