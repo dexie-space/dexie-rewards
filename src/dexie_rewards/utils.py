@@ -14,11 +14,11 @@ from chia.cmds.keys_funcs import private_key_for_fingerprint
 from chia.consensus.coinbase import create_puzzlehash_for_pk
 from chia.types.blockchain_format.sized_bytes import bytes32
 from chia.util.ints import uint32
+from chia.wallet.cat_wallet.cat_utils import CAT_MOD
 from chia.wallet.derive_keys import (
     master_sk_to_wallet_sk,
     master_sk_to_wallet_sk_unhardened,
 )
-from chia.wallet.puzzles.cat_loader import CAT_MOD
 from chia.wallet.puzzles.p2_delegated_puzzle_or_hidden_puzzle import (
     calculate_synthetic_secret_key,
     DEFAULT_HIDDEN_PUZZLE_HASH,
