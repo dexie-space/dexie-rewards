@@ -11,17 +11,17 @@ When rewards are claimed, a message from the input (maker) address of the offer 
 
 ```
 ❯ dexie rewards claim
-╭──────────────────────────────────────────────┬───────────────╮
-│                   Offer ID                   │ Rewards (DBX) │
-├──────────────────────────────────────────────┼───────────────┤
-│ 8Ya1mwC7Z8S4RhKhuJjKPH6mQVksz4Hah8JsZ5NjaBYY │         0.494 │
-│ BZFXcbJM7oSMz9RatJpMBSD1Hmj4JWXHJE7DCBXDV8mJ │        21.854 │
-│ CbdGX5KUHnHLbX8VSFPKTDcbK87NKUtQTQaFxtYQvnPG │         7.810 │
-│ 8GpFJ8o6pVthTKmzimKxTTg8vT6sPFm44xz3nXNUMtbG │         4.197 │
-│ 4mhTGao7SDTCsgZknLDhaboE9xBhkB56ZoWVyMzpA51E │        10.831 │
-├──────────────────────────────────────────────┼───────────────┤
-│      Found 5 offers with total rewards       │        45.186 │
-╰──────────────────────────────────────────────┴───────────────╯
+Found 6 offers with rewards
+╭──────────────────────────────────────────────┬─────────┬─────╮
+│                   Offer ID                   │ Rewards │ CAT │
+├──────────────────────────────────────────────┼─────────┼─────┤
+│ 8Ya1mwC7Z8S4RhKhuJjKPH6mQVksz4Hah8JsZ5NjaBYY │   0.494 │ DBX │
+│ BZFXcbJM7oSMz9RatJpMBSD1Hmj4JWXHJE7DCBXDV8mJ │  21.854 │ DBX │
+│ CbdGX5KUHnHLbX8VSFPKTDcbK87NKUtQTQaFxtYQvnPG │   7.810 │ DBX │
+│ 8GpFJ8o6pVthTKmzimKxTTg8vT6sPFm44xz3nXNUMtbG │   4.197 │ DBX │
+│ 4mhTGao7SDTCsgZknLDhaboE9xBhkB56ZoWVyMzpA51E │  10.831 │ DBX │
+│ 3BWdysASaDMN2sCnB9S9tBtc7nUeC3Ys7ZW3aX6xpEZu │   9.806 │ HOA │
+╰──────────────────────────────────────────────┴─────────┴─────╯
 Claim all? [y/n]:
 ```
 
@@ -95,7 +95,7 @@ Run any command with the `--help` option to see all available functionality.
   --verify-only     -vo       Only verify the claim, don't actually claim
   --yes             -y        Skip claim confirmation
   --verbose         -v        Display verbose output
---target            -t        Specify a target address to claim rewards to
+  --target          -t        Specify a target address to claim rewards to
   --completed-only  -co       Only claim rewards for completed and cancelled offers
   --help                      Show help and exit
 ```
