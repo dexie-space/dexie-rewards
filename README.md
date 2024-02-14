@@ -95,7 +95,7 @@ Run any command with the `--help` option to see all available functionality.
   --verify-only     -vo       Only verify the claim, don't actually claim
   --yes             -y        Skip claim confirmation
   --verbose         -v        Display verbose output
---target            -t        Specify a target address to claim rewards to
+  --target          -t        Specify a target address to claim rewards to
   --completed-only  -co       Only claim rewards for completed and cancelled offers
   --help                      Show help and exit
 ```
