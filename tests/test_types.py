@@ -1,5 +1,4 @@
-from datetime import datetime, timezone
-import pytest
+from datetime import datetime
 
 from dexie_rewards.types.utils import to_datetime, from_datetime
 

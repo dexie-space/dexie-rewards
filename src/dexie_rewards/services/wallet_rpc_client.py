@@ -1,51 +1,58 @@
-from typing import List, Tuple
+from typing import List, Optional, Tuple
 
-from chia.types.blockchain_format.sized_bytes import bytes32
+import aiomisc
+
 from chia.rpc.wallet_rpc_client import WalletRpcClient
+from chia.types.blockchain_format.sized_bytes import bytes32
 from chia.util.bech32m import encode_puzzle_hash
 from chia.wallet.trade_record import TradeRecord
 
-from ..config import (
+from dexie_rewards.config import (
     address_prefix,
     chia_config,
     chia_root,
     self_hostname,
     wallet_rpc_port,
 )
-from ..decorators.with_wallet_rpc_client import with_wallet_rpc_client
 
 
-@with_wallet_rpc_client(self_hostname, wallet_rpc_port, chia_root, chia_config)
-async def get_logged_in_fingerprint(
-    wallet_rpc_client: WalletRpcClient,
-) -> int:
-    return await wallet_rpc_client.get_logged_in_fingerprint()
+class WalletRpcClientService(aiomisc.Service):
+    """
+    Mediate access to the chia wallet rpc interface
+    """
 
+    _conn: WalletRpcClient
 
-@with_wallet_rpc_client(self_hostname, wallet_rpc_port, chia_root, chia_config)
-async def log_in(wallet_rpc_client: WalletRpcClient, fingerprint: int) -> None:
-    await wallet_rpc_client.log_in(fingerprint)
+    async def start(self) -> None:
+        self._conn = await WalletRpcClient.create(
+            self_hostname, wallet_rpc_port, chia_root, chia_config
+        )
 
+    async def log_in(self, fingerprint: int) -> None:
+        rep = await self._conn.log_in(fingerprint)
+        if rep["success"] is False:
+            raise Exception("error logging in", rep)
 
-@with_wallet_rpc_client(self_hostname, wallet_rpc_port, chia_root, chia_config)
-async def get_synced(wallet_rpc_client: WalletRpcClient) -> bool:
-    return await wallet_rpc_client.get_synced()
+    async def stop(self, exc: Optional[Exception] = None) -> None:
+        await super().stop(exc)
+        self._conn.close()
+        await self._conn.await_closed()
 
+    async def get_all_offers(self) -> List[TradeRecord]:
+        return await self._conn.get_all_offers(
+            include_completed=True,
+            exclude_taken_offers=True,
+            file_contents=True,
+            start=0,
+            end=1000,
+        )
 
-@with_wallet_rpc_client(self_hostname, wallet_rpc_port, chia_root, chia_config)
-async def get_all_offers(wallet_rpc_client: WalletRpcClient) -> List[TradeRecord]:
-    return await wallet_rpc_client.get_all_offers(
-        include_completed=True,
-        exclude_taken_offers=True,
-        file_contents=True,
-        start=0,
-        end=1000,
-    )
+    async def sign_message_by_puzzle_hash(
+        self, puzzle_hash: bytes32, message: str
+    ) -> Tuple[str, str, str]:
+        address: str = encode_puzzle_hash(puzzle_hash, address_prefix)
+        return await self._conn.sign_message_by_address(address, message)
 
-
-@with_wallet_rpc_client(self_hostname, wallet_rpc_port, chia_root, chia_config)
-async def sign_message_by_puzzle_hash(
-    wallet_rpc_client: WalletRpcClient, puzzle_hash: bytes32, message: str
-) -> Tuple[str, str, str]:
-    address: str = encode_puzzle_hash(puzzle_hash, address_prefix)
-    return await wallet_rpc_client.sign_message_by_address(address, message)
+    @property
+    def conn(self) -> WalletRpcClient:
+        return self._conn

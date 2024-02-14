@@ -2,7 +2,7 @@ import aiohttp
 import based58
 import dataclasses
 import hashlib
-from typing import Any, Dict, Optional
+from typing import Any, Dict
 
 from chia.wallet.trading.offer import Offer
 
