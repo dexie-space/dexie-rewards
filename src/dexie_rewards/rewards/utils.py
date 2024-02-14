@@ -130,7 +130,7 @@ def display_rewards(offers_rewards: List[OfferReward]) -> None:
         console.print("No rewards to claim", style="bold red")
         return
 
-    console.print(Text(f"Found {num_offers} offers with total rewards"))
+    console.print(Text(f"Found {num_offers} offers with rewards"))
 
     table = Table(
         box=box.ROUNDED,

@@ -11,6 +11,7 @@ When rewards are claimed, a message from the input (maker) address of the offer 
 
 ```
 ❯ dexie rewards claim
+Found 6 offers with rewards
 ╭──────────────────────────────────────────────┬─────────┬─────╮
 │                   Offer ID                   │ Rewards │ CAT │
 ├──────────────────────────────────────────────┼─────────┼─────┤
