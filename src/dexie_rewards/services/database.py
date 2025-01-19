@@ -47,7 +47,7 @@ class DatabaseService(aiomisc.Service, OfferTableMixin, DatabaseServiceBase):
 
             self._fingerprint = (
                 await self._wallet_rpc_client.conn.get_logged_in_fingerprint()
-            )
+            ).fingerprint
 
         db_location = self._location.joinpath(f"dexie-{self._fingerprint}.db")
 

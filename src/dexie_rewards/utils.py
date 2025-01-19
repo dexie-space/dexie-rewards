@@ -16,7 +16,6 @@ async def is_wallet_synced(
     wallet_rpc_client: WalletRpcClientService, fingerprint: int
 ) -> bool:
     await wallet_rpc_client.log_in(fingerprint)
-
     is_synced = await wallet_rpc_client.conn.get_synced()
     if is_synced:
         return True
@@ -30,7 +29,7 @@ async def wait_for_synced_wallet(
     console: Console = Console(),
 ) -> int:
     if fingerprint is None:
-        fingerprint = await wallet_rpc_client.conn.get_logged_in_fingerprint()
+        fingerprint = await wallet_rpc_client.get_logged_in_fingerprint()
         if fingerprint is None:
             raise Exception("No wallet logged in")
         console.print(f"Using wallet with fingerprint: {fingerprint}")
