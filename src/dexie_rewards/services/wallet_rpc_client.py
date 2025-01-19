@@ -5,6 +5,7 @@ import aiomisc
 from chia.rpc.wallet_rpc_client import WalletRpcClient
 from chia.types.blockchain_format.sized_bytes import bytes32
 from chia.util.bech32m import encode_puzzle_hash
+from chia.rpc.wallet_request_types import LogIn, GetLoggedInFingerprintResponse
 from chia.wallet.trade_record import TradeRecord
 
 from dexie_rewards.config import (
@@ -29,9 +30,13 @@ class WalletRpcClientService(aiomisc.Service):
         )
 
     async def log_in(self, fingerprint: int) -> None:
-        rep = await self._conn.log_in(fingerprint)
-        if rep["success"] is False:
-            raise Exception("error logging in", rep)
+        await self._conn.log_in(LogIn(fingerprint))
+
+    async def get_logged_in_fingerprint(self) -> GetLoggedInFingerprintResponse:
+        res: GetLoggedInFingerprintResponse = (
+            await self._conn.get_logged_in_fingerprint()
+        )
+        return res.fingerprint
 
     async def stop(self, exc: Optional[Exception] = None) -> None:
         await super().stop(exc)
